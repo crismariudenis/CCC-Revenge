@@ -5,10 +5,10 @@ signed main()
     cin >> nrLines;
     while (nrLines)
     {
-        string code;
-        cin >> code;
+        string token;
+        cin >> token;
         nrLines--;
-        if (code == "start")
+        if (token == "start")
             Program p;
     }
 }

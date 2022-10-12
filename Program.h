@@ -16,9 +16,11 @@ public:
     ~Program()
     {
         if (!error)
+        {
             for (const auto &line : output)
                 cout << line;
-        cout << '\n';
+            cout << '\n';
+        }
     }
     Program(const Program &p)
     {
@@ -52,10 +54,10 @@ private:
     }
     void Main()
     {
-        string code;
-        cin >> code;
+        string token;
+        cin >> token;
         nrLines--;
-        switch (hashIt(code))
+        switch (hashIt(token))
         {
         case PRINT:
             Print();
@@ -101,23 +103,23 @@ void Program::Error()
 }
 void Program::Print()
 {
-    string code;
-    cin >> code;
-    if (variables.find(code) != variables.end())
-        output.push_back(variables[code]);
+    string token;
+    cin >> token;
+    if (variables.find(token) != variables.end())
+        output.push_back(variables[token]);
     else
-        output.push_back(code);
+        output.push_back(token);
 }
 void Program::If()
 {
-    string code;
-    cin >> code;
+    string token;
+    cin >> token;
 
-    if (code == "true")
+    if (token == "true")
         Program smallP = *this;
     else
-        while (code != "end")
-            cin >> code;
+        while (token != "end")
+            cin >> token;
 }
 void Program::While() {}
 void Program::Var()

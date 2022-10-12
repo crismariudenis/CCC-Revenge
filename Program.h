@@ -6,16 +6,8 @@ int nrLines;
 class Program
 {
 
-public:
-void print(){
-    for(const auto &[key, value] : variables){
-        cout << key << " " << value << endl;
-    }
-    cout << '\n';
-}
-
 private:
-    bool error = 0;
+    bool error = false;
     vector<string> output;
     map<string, string> variables;
 
@@ -23,14 +15,15 @@ public:
     Program() { Main(); }
     ~Program()
     {
-        cout<<"object adress: "<<this<<endl;
         if (!error)
-            for (auto &line : output)
+            for (const auto &line : output)
                 cout << line;
         cout << '\n';
     }
-    Program(const Program &p){
-        variables=p.variables;
+    Program(const Program &p)
+    {
+        variables = p.variables;
+        Main();
     }
 
 private:
@@ -91,6 +84,14 @@ private:
     void Error();
     void Var();
     void Set();
+
+public:
+    void debug()
+    {
+        for (const auto &[key, value] : variables)
+            cout << key << " " << value << " ";
+        cout << '\n';
+    }
 };
 void Program::Error()
 {
@@ -102,13 +103,18 @@ void Program::Print()
 {
     string code;
     cin >> code;
-    output.push_back(code);
+    if (variables.find(code) != variables.end())
+        output.push_back(variables[code]);
+    else
+        output.push_back(code);
 }
-void Program::If() {
+void Program::If()
+{
     string code;
     cin >> code;
-    if (code== "true")
-            Program ifP=*this;
+
+    if (code == "true")
+        Program smallP = *this;
     else
         while (code != "end")
             cin >> code;
@@ -123,7 +129,8 @@ void Program::Var()
     else
         variables[name] = value;
 }
-void Program::Set() {
+void Program::Set()
+{
     string name, value;
     cin >> name >> value;
     if (variables.find(name) == variables.end())

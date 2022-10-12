@@ -5,18 +5,32 @@ int nrLines;
 
 class Program
 {
+
+public:
+void print(){
+    for(const auto &[key, value] : variables){
+        cout << key << " " << value << endl;
+    }
+    cout << '\n';
+}
+
 private:
     bool error = 0;
     vector<string> output;
-    map<string, string> values;
+    map<string, string> variables;
 
 public:
     Program() { Main(); }
     ~Program()
     {
+        cout<<"object adress: "<<this<<endl;
         if (!error)
             for (auto &line : output)
                 cout << line;
+        cout << '\n';
+    }
+    Program(const Program &p){
+        variables=p.variables;
     }
 
 private:
@@ -90,22 +104,30 @@ void Program::Print()
     cin >> code;
     output.push_back(code);
 }
-void Program::If() {}
+void Program::If() {
+    string code;
+    cin >> code;
+    if (code== "true")
+            Program ifP=*this;
+    else
+        while (code != "end")
+            cin >> code;
+}
 void Program::While() {}
 void Program::Var()
 {
     string name, value;
     cin >> name >> value;
-    if (values.find(name) != values.end())
+    if (variables.find(name) != variables.end())
         Error();
     else
-        values[name] = value;
+        variables[name] = value;
 }
 void Program::Set() {
     string name, value;
     cin >> name >> value;
-    if (values.find(name) == values.end())
+    if (variables.find(name) == variables.end())
         Error();
     else
-        values[name] = value;
+        variables[name] = value;
 }

@@ -8,8 +8,10 @@ class Program
 
 private:
     bool error = false;
+    bool lastIF = false;
     vector<string> output;
     map<string, string> variables;
+    bool lastIF=false;
 
 public:
     Program() { Main(); }
@@ -36,7 +38,8 @@ private:
         WHILE,
         END,
         VAR,
-        SET
+        SET,
+        ELSE
     };
     Type hashIt(string const &s)
     {
@@ -50,13 +53,17 @@ private:
             return VAR;
         if (s == "set")
             return SET;
+        if (s == "else")
+            return ELSE;
         return END;
     }
+
     void Main()
     {
         string token;
         cin >> token;
         nrLines--;
+        lastIF = false;
         switch (hashIt(token))
         {
         case PRINT:
@@ -74,10 +81,12 @@ private:
         case SET:
             Set();
             break;
+        case ELSE:
+            Else();
+            break;
         case END:
             return;
         }
-
         Main();
     }
     void Print();
@@ -85,21 +94,26 @@ private:
     void While();
     void Error();
     void Var();
+    void Else();
     void Set();
-
-public:
-    void debug()
-    {
-        for (const auto &[key, value] : variables)
-            cout << key << " " << value << " ";
-        cout << '\n';
-    }
+    void LoopThroughEnd(string &token);
 };
 void Program::Error()
 {
-    cout << "ERROR\n";
+    cout << "ERROR";
     error = 1;
     return;
+}
+void Program::LoopThroughEnd(string &token)
+{
+
+    //Todo: Read lines not just strings
+    while (token != "end")
+    {
+        cin >> token;
+        nrLines--;
+    }
+    nrLines--;
 }
 void Program::Print()
 {
@@ -110,16 +124,36 @@ void Program::Print()
     else
         output.push_back(token);
 }
+void Program::Else()
+{
+    //Todo
+    if (lastIF == false)
+        Program smallP = *this;
+    else{
+
+    }
+}
 void Program::If()
 {
     string token;
     cin >> token;
-
-    if (token == "true")
+    if ((variables.find(token) != variables.end() && variables[token] == "true") || token == "true")
+    {
+        lastIF = true;
         Program smallP = *this;
+    }
     else
-        while (token != "end")
-            cin >> token;
+    {
+        lastIF = false;
+        LoopThroughEnd(token);
+    }
+}
+void Program::Else()
+{
+    string token;
+    cin >> token;
+    while (token != "end")
+        cin >> token;
 }
 void Program::While() {}
 void Program::Var()

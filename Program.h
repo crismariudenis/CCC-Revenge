@@ -11,7 +11,6 @@ private:
     bool lastIF = false;
     vector<string> output;
     map<string, string> variables;
-    bool lastIF=false;
 
 public:
     Program() { Main(); }
@@ -106,13 +105,14 @@ void Program::Error()
 }
 void Program::LoopThroughEnd(string &token)
 {
-
-    //Todo: Read lines not just strings
     while (token != "end")
     {
-        cin >> token;
+        getline(cin, token);
+        cin>>token;
+        cerr <<'#'<< token <<(token=="end")<< '\n';
         nrLines--;
     }
+    cout << '\n';
     nrLines--;
 }
 void Program::Print()
@@ -126,11 +126,13 @@ void Program::Print()
 }
 void Program::Else()
 {
-    //Todo
+    // Todo
     if (lastIF == false)
         Program smallP = *this;
-    else{
-
+    else
+    {
+        string token = "not end";
+        LoopThroughEnd(token);
     }
 }
 void Program::If()
@@ -147,13 +149,6 @@ void Program::If()
         lastIF = false;
         LoopThroughEnd(token);
     }
-}
-void Program::Else()
-{
-    string token;
-    cin >> token;
-    while (token != "end")
-        cin >> token;
 }
 void Program::While() {}
 void Program::Var()
